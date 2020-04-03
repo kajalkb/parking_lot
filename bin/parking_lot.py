@@ -112,32 +112,32 @@ def showSNoWithSameColor (plotSlots, scolor):
 def showSNoWithRegNumber (plotSlots, carRNo):
     plotSlots.sNowithRegNo(carRNo)
 
+def cmdInterpretor(plotSlots, parkingCommand):
 
-#starting of program
-'''
-noOfslots = 5
-carRegNo = "KA-1234"
-carColor = "White"
-sNo = 4
-plotSlots = createParkingSlots(noOfslots)
-parkVehicleinSlots(plotSlots, carRegNo, carColor)
-parkVehicleinSlots(plotSlots, "MH-3456", "RED")
-parkVehicleinSlots(plotSlots, "KL-1999", "Orange")
-parkVehicleinSlots(plotSlots, "WB-9876", "White")
-parkVehicleinSlots(plotSlots, "MH-1111", "White")
+    cmdline = parkingCommand.split()
 
-print(removeFromParkingSlot(plotSlots, 4))
-#print(plotSlots.slots)
+    if(cmdline[0] == 'create_parking_lot'):
+        plotSlots = createParkingSlots(cmdline[1])
+    elif(cmdline[0] == 'park'):
+        parkVehicleinSlots(plotSlots, cmdline[1], cmdline[2])
+    elif(cmdline[0] == 'leave'):
+        removeFromParkingSlot(plotSlots, cmdline[1])
+    elif(cmdline[0] == 'status'):
+        showStatus(plotSlots)
+    elif(cmdline[0] == 'registration_numbers_for_cars_with_colour'):
+        showRegNoWithSameColor(plotSlots, cmdline[1])
+    elif(cmdline[0] == 'slot_numbers_for_cars_with_colour'):
+        showSNoWithSameColor(plotSlots, cmdline[1])
+    elif(cmdline[0] == 'slot_number_for_registration_number'):
+        showSNoWithRegNumber(plotSlots, cmdline[1])
+    else:
+        print('Invalid command.')
 
-showStatus(plotSlots)
-
-parkVehicleinSlots(plotSlots, "WB-9876", "White")
-showStatus(plotSlots)
-parkVehicleinSlots(plotSlots, "JH-9999", "Pink")#check overflow
-parkVehicleinSlots(plotSlots, "JH-9999", "Pink")'''
+    return plotSlots
 
 def exeCuteInteractively():#commands :create_parking_lot,park,leave,status, exit etc
-    cmdline = input().split()s
+    cmdline = input().split()
+
     while(cmdline[0] != 'exit'):
         if(cmdline[0] == 'create_parking_lot'):
             plotSlots = createParkingSlots(cmdline[1])
@@ -157,15 +157,27 @@ def exeCuteInteractively():#commands :create_parking_lot,park,leave,status, exit
         else:
             break
         cmdline = input().split()
-
     return
+
+
+def exeCuteWithFileInputs(plotSlots, inCmdFile):
+    f = open(inCmdFile, "r")
+    while (True):
+        cmds = f.readline()
+        if cmds == '':
+            break
+        plotSlots = cmdInterpretor(plotSlots, cmds)
+
+
+def initialize(plotSlots):
+    if len(sys.argv) == 2:
+        exeCuteWithFileInputs(plotSlots, sys.argv[1])#call with the file name
+    else:
+        exeCuteInteractively()
 
 def main():
     #print('test')
-    if len(sys.argv) == 2:
-        exeCuteWithFileInputs(sys.argv[1])#call with the file name
-    else:
-        exeCuteInteractively()
+    initialize(None)
 
 
 if __name__ == '__main__':
