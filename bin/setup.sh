@@ -1,3 +1,3 @@
 #!/bin/bash
 
-python3 run_functional_specs.py
+python3 unit_tests.py
