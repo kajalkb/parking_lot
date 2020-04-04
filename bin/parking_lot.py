@@ -1,5 +1,6 @@
-import collections
 import sys
+import collections
+
 class cars:
     def __init__(self, carRegNo, carColor):
         self.carRegNo = carRegNo
@@ -9,7 +10,6 @@ class parkinglot:
     def __init__(self, slot):
         self.slot = int(slot)
         self.slots = dict.fromkeys(range(self.slot))#creating empty dictionary for given lenght
-        self.pCount = 0
 
     def checkifSlotsAreUsedUp(self):
         counter = 0
@@ -27,29 +27,34 @@ class parkinglot:
 
     def parkCar(self, plotSlots, carDetails):
         if  self.checkifSlotsAreUsedUp():
+            sinfoMsg = 'Sorry, parking lot is full'
             print('Sorry, parking lot is full')
-            return
+            return sinfoMsg
 
         prev = 0
         for i in list(plotSlots.slots):
             if (i - prev == 2):#inserting blank element
                 j = prev+1
-                d1 = {j: carDetails}
-                plotSlots.slots.update(d1)
+                plotSlots.slots[j]=carDetails
+                #sort the listS
                 plotSlots.slots = collections.OrderedDict(sorted(plotSlots.slots.items()))
+                sinfoMsg = 'Allocated slot number: ' + str(j+1)
                 print ('Allocated slot number: ', j+1)
-                return
+                return sinfoMsg
 
             if plotSlots.slots[i] == None:
                 plotSlots.slots[i] = carDetails
+                sinfoMsg = 'Allocated slot number: '+ str(i+1)
                 print ('Allocated slot number: ', i+1)
-                break
+                return sinfoMsg
             prev = i
 
 
     def removeACar(self, sNumber):
         self.slots.pop(sNumber)
-        print ('Slot number ',int(sNumber)+1,' is free ')
+        print ('Slot number ',int(sNumber)+1,' is free')
+        strRemoveMsg = 'Slot number ' + str(int(sNumber)+1) + ' is free'
+        return strRemoveMsg
 
     def status(self):
         print('Slot No.      ','Registration No','     Colour')
@@ -64,6 +69,7 @@ class parkinglot:
             if self.slots[i].carColor == scolor:
                     listRegNo.append(self.slots[i].carRegNo)
         print(', '.join(listRegNo))
+        return listRegNo
 
     def sNowithColor(self, scolor):
         sNos = ''
@@ -72,6 +78,7 @@ class parkinglot:
             if self.slots[i].carColor == scolor:
                     listSNo.append(i+1)
         print(*listSNo, sep = ", ")
+        return listSNo
 
     def sNowithRegNo(self, carRNo):
         carFound = False
@@ -79,6 +86,7 @@ class parkinglot:
             if self.slots[i].carRegNo == carRNo:
                 carFound = True
                 print(i+1)
+                return i+1
         if not carFound :
             print('Not found')
 
@@ -94,23 +102,28 @@ def createParkingSlots(noOfslots):
 
 def parkVehicleinSlots(plotSlots, carRegNo, carColor):
     carDetails = cars(carRegNo, carColor)
-    plotSlots.parkCar(plotSlots, carDetails)
-    #return "Parking Successful"
+    parkStMsg = plotSlots.parkCar(plotSlots, carDetails)
+    return parkStMsg
 
 def removeFromParkingSlot(plotSlots, sNumber):
-    plotSlots.removeACar(int(sNumber)-1)
+    strRemoveMsg = plotSlots.removeACar(int(sNumber)-1)
+    return strRemoveMsg
 
 def showStatus(plotSlots):
     plotSlots.status()
 
+
 def showRegNoWithSameColor(plotSlots, scolor):
-    plotSlots.regNowithColor(scolor)
+    strRegnos = plotSlots.regNowithColor(scolor)
+    return ', '.join(strRegnos)
 
 def showSNoWithSameColor (plotSlots, scolor):
-    plotSlots.sNowithColor(scolor)
+    strSNo = plotSlots.sNowithColor(scolor)
+    return strSNo
 
 def showSNoWithRegNumber (plotSlots, carRNo):
-    plotSlots.sNowithRegNo(carRNo)
+    strSlotNo = plotSlots.sNowithRegNo(carRNo)
+    return strSlotNo
 
 
 def cmdInterpretor(plotSlots, parkingCommand , cmdMode):
@@ -127,7 +140,8 @@ def cmdInterpretor(plotSlots, parkingCommand , cmdMode):
     elif(cmdline[0] == 'park'):
         parkVehicleinSlots(plotSlots, cmdline[1], cmdline[2])
     elif(cmdline[0] == 'leave'):
-        removeFromParkingSlot(plotSlots, cmdline[1])
+        if plotSlots :
+            removeFromParkingSlot(plotSlots, cmdline[1])
     elif(cmdline[0] == 'status'):
         showStatus(plotSlots)
     elif(cmdline[0] == 'registration_numbers_for_cars_with_colour'):
@@ -141,15 +155,6 @@ def cmdInterpretor(plotSlots, parkingCommand , cmdMode):
 
     return plotSlots
 
-def exeCuteInteractively(plotSlots):#commands :create_parking_lot,park,leave,status, exit etc
-    cmdline = input().split()
-
-    while(cmdline[0] != 'exit'):
-        plotSlots = cmdInterpretor(plotSlots, cmdline,'iMode')#iMode is for interactive mode
-        cmdline = input().split()
-    return
-
-
 def exeCuteWithFileInputs(plotSlots, inCmdFile):
     f = open(inCmdFile, "r")
     while (True):
@@ -157,6 +162,14 @@ def exeCuteWithFileInputs(plotSlots, inCmdFile):
         if cmds == '':
             break
         plotSlots = cmdInterpretor(plotSlots, cmds, 'fMode')#fMode is for file input mode
+    return
+
+def exeCuteInteractively(plotSlots):#commands :create_parking_lot,park,leave,status, exit etc
+    cmdline = input().split()
+
+    while(cmdline[0] != 'exit'):
+        plotSlots = cmdInterpretor(plotSlots, cmdline,'iMode')#iMode is for interactive mode
+        cmdline = input().split()
     return
 
 def initialize(plotSlots):
@@ -167,7 +180,6 @@ def initialize(plotSlots):
     return
 
 def main():
-    #print('test')
     initialize(None)
 
 
