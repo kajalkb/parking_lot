@@ -112,9 +112,15 @@ def showSNoWithSameColor (plotSlots, scolor):
 def showSNoWithRegNumber (plotSlots, carRNo):
     plotSlots.sNowithRegNo(carRNo)
 
-def cmdInterpretor(plotSlots, parkingCommand):
 
-    cmdline = parkingCommand.split()
+def cmdInterpretor(plotSlots, parkingCommand , cmdMode):
+
+    #adding the following condition as list does
+    #not have a split() in interactive mode for parkingCommand
+    if(cmdMode == 'fMode'):
+        cmdline = parkingCommand.split()
+    else:
+        cmdline = parkingCommand
 
     if(cmdline[0] == 'create_parking_lot'):
         plotSlots = createParkingSlots(cmdline[1])
@@ -135,27 +141,11 @@ def cmdInterpretor(plotSlots, parkingCommand):
 
     return plotSlots
 
-def exeCuteInteractively():#commands :create_parking_lot,park,leave,status, exit etc
+def exeCuteInteractively(plotSlots):#commands :create_parking_lot,park,leave,status, exit etc
     cmdline = input().split()
 
     while(cmdline[0] != 'exit'):
-        if(cmdline[0] == 'create_parking_lot'):
-            plotSlots = createParkingSlots(cmdline[1])
-        elif(cmdline[0] == 'park'):
-            parkVehicleinSlots(plotSlots, cmdline[1], cmdline[2])
-        elif(cmdline[0] == 'leave'):
-            removeFromParkingSlot(plotSlots, cmdline[1])
-        elif(cmdline[0] == 'status'):
-            showStatus(plotSlots)
-        elif(cmdline[0] == 'registration_numbers_for_cars_with_colour'):
-            showRegNoWithSameColor(plotSlots, cmdline[1])
-        elif(cmdline[0] == 'slot_numbers_for_cars_with_colour'):
-            showSNoWithSameColor(plotSlots, cmdline[1])
-        elif(cmdline[0] == 'slot_number_for_registration_number'):
-            showSNoWithRegNumber(plotSlots, cmdline[1])
-
-        else:
-            break
+        plotSlots = cmdInterpretor(plotSlots, cmdline,'iMode')#iMode is for interactive mode
         cmdline = input().split()
     return
 
@@ -166,14 +156,15 @@ def exeCuteWithFileInputs(plotSlots, inCmdFile):
         cmds = f.readline()
         if cmds == '':
             break
-        plotSlots = cmdInterpretor(plotSlots, cmds)
-
+        plotSlots = cmdInterpretor(plotSlots, cmds, 'fMode')#fMode is for file input mode
+    return
 
 def initialize(plotSlots):
     if len(sys.argv) == 2:
         exeCuteWithFileInputs(plotSlots, sys.argv[1])#call with the file name
     else:
-        exeCuteInteractively()
+        exeCuteInteractively(plotSlots)
+    return
 
 def main():
     #print('test')
