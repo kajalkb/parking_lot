@@ -39,28 +39,28 @@ class parkinglot:
                 #sort the listS
                 plotSlots.slots = collections.OrderedDict(sorted(plotSlots.slots.items()))
                 sinfoMsg = 'Allocated slot number: ' + str(j+1)
-                print ('Allocated slot number: ', j+1)
+                print ('Allocated slot number:', j+1)
                 return sinfoMsg
 
             if plotSlots.slots[i] == None:
                 plotSlots.slots[i] = carDetails
-                sinfoMsg = 'Allocated slot number: '+ str(i+1)
-                print ('Allocated slot number: ', i+1)
+                sinfoMsg = 'Allocated slot number: ' + str(i+1)
+                print ('Allocated slot number:', i+1)
                 return sinfoMsg
             prev = i
 
 
     def removeACar(self, sNumber):
         self.slots.pop(sNumber)
-        print ('Slot number ',int(sNumber)+1,' is free')
+        print ('Slot number', int(sNumber)+1 ,'is free')
         strRemoveMsg = 'Slot number ' + str(int(sNumber)+1) + ' is free'
         return strRemoveMsg
 
     def status(self):
-        print('Slot No.      ','Registration No','     Colour')
+        print('Slot No.   ','Registration No','   Colour')
         for i in self.slots:
             j = i+1
-            print(j,'           ',self.slots[i].carRegNo,'             ',self.slots[i].carColor,'     ')
+            print(j,'         ',self.slots[i].carRegNo,'    ',self.slots[i].carColor)
 
     def regNowithColor(self, scolor):
         regNos = ''
@@ -97,7 +97,7 @@ class ticket:
 
 def createParkingSlots(noOfslots):
     plotSlots = parkinglot(noOfslots)
-    print('Created a parking lot with ', noOfslots ,' slots')
+    print('Created a parking lot with', noOfslots ,'slots')
     return plotSlots
 
 def parkVehicleinSlots(plotSlots, carRegNo, carColor):
