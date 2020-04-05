@@ -1,11 +1,15 @@
 import sys
 import collections
 
+# Contains the car registration number and colour
+# This helps us to create instance of multiple cars parked
 class cars:
     def __init__(self, carRegNo, carColor):
         self.carRegNo = carRegNo
         self.carColor = carColor
 
+# Parking lot used to contains the slot information against
+# multiple cars being parkedCar
 class parkinglot:
     def __init__(self, slot):
         self.slot = int(slot)
@@ -95,37 +99,50 @@ class ticket:
         self.slot = slot
         self.car = car
 
+# creates parking slot based on the number of get_slots
+# passed to it
 def createParkingSlots(noOfslots):
     plotSlots = parkinglot(noOfslots)
     print('Created a parking lot with', noOfslots ,'slots')
     return plotSlots
 
+# parks the car to the nearest slot from the start
 def parkVehicleinSlots(plotSlots, carRegNo, carColor):
     carDetails = cars(carRegNo, carColor)
     parkStMsg = plotSlots.parkCar(plotSlots, carDetails)
     return parkStMsg
 
+# Removes the car from the slot number in the
+# parking lot
 def removeFromParkingSlot(plotSlots, sNumber):
     strRemoveMsg = plotSlots.removeACar(int(sNumber)-1)
     return strRemoveMsg
 
+# Displays status of parking lot with slot number ,
+# car number and color in an order
 def showStatus(plotSlots):
     plotSlots.status()
 
-
+# Displays registraton number of the cars whose colour is
+# provided
 def showRegNoWithSameColor(plotSlots, scolor):
     strRegnos = plotSlots.regNowithColor(scolor)
     return ', '.join(strRegnos)
 
+# Displays slot number of the cars whose colour is
+# provided
 def showSNoWithSameColor (plotSlots, scolor):
     strSNo = plotSlots.sNowithColor(scolor)
     return strSNo
 
+# Displays slot number of whose registration number is
+# provided
 def showSNoWithRegNumber (plotSlots, carRNo):
     strSlotNo = plotSlots.sNowithRegNo(carRNo)
     return strSlotNo
 
-
+# Interprates the command from the command line or from the file input
+# and runs the command accordintly
 def cmdInterpretor(plotSlots, parkingCommand , cmdMode):
 
     #adding the following condition as list does
@@ -134,6 +151,11 @@ def cmdInterpretor(plotSlots, parkingCommand , cmdMode):
         cmdline = parkingCommand.split()
     else:
         cmdline = parkingCommand
+
+    if not cmdline[0] == 'create_parking_lot':
+        if plotSlots == None:
+            print('Parking slot is not initialized. Please use create_parking_lot to get started.')
+            return
 
     if(cmdline[0] == 'create_parking_lot'):
         plotSlots = createParkingSlots(cmdline[1])
@@ -155,6 +177,8 @@ def cmdInterpretor(plotSlots, parkingCommand , cmdMode):
 
     return plotSlots
 
+# Reads the commands from a input file (txt format) and calls
+# cmdInterpretor to run them one by one till the end of the file is met
 def exeCuteWithFileInputs(plotSlots, inCmdFile):
     f = open(inCmdFile, "r")
     while (True):
@@ -164,7 +188,9 @@ def exeCuteWithFileInputs(plotSlots, inCmdFile):
         plotSlots = cmdInterpretor(plotSlots, cmds, 'fMode')#fMode is for file input mode
     return
 
-def exeCuteInteractively(plotSlots):#commands :create_parking_lot,park,leave,status, exit etc
+# Reads the command individually via the input() function and calls
+# cmdInterpretor to run them one by one till exit is passed
+def exeCuteInteractively(plotSlots):
     cmdline = input().split()
 
     while(cmdline[0] != 'exit'):
@@ -172,6 +198,9 @@ def exeCuteInteractively(plotSlots):#commands :create_parking_lot,park,leave,sta
         cmdline = input().split()
     return
 
+# The initialize function will parse arguments via the parser variable.  These
+# arguments will be defined by the user on the console. Either its a filename
+# or a inidividual command
 def initialize(plotSlots):
     if len(sys.argv) == 2:
         exeCuteWithFileInputs(plotSlots, sys.argv[1])#call with the file name
@@ -179,6 +208,8 @@ def initialize(plotSlots):
         exeCuteInteractively(plotSlots)
     return
 
+# The main function calls the initialize function and passes None to
+# initilize parkingLot class object
 def main():
     initialize(None)
 

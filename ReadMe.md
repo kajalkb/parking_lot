@@ -2,6 +2,7 @@ Directory structure
 ========================
 parking_lot/bin/setup.sh
 parking_lot/bin/parking_lot.py
+parking_lot/bin/unit_tests.py
 parking_lot/bin/run_functional_tests
 
 parking_lot/run_functional_specs/fixtures/file_inputs.txt
@@ -31,7 +32,7 @@ python3 parking_lot.py file_input.txt
 
 Testing module(automated unit test) -
 ======================================
-1. Using unittest, the unit_tests.py is written which has a series of automated unit tests.
+1. Using unittest, the unit_tests.py is written which has a series of unit tests for the helper functions.
 2. This is a suite of automated unit test thats implemented using a practise of test driven development.
 3. Its under parking_lot\bin directory
 4. Run the following command to execute this, go to the bin directory first from the terminal -
@@ -43,3 +44,5 @@ Functional tests -
 For example ---> PTY.spawn("python3 /Users/kajalbiswas/Documents/work/practisePython/parking_lot/bin/parking_lot.py")
 2. And ran command -->
 parking_lot $ bin/run_functional_test
+3. On Mac machine it ran successfully. 
+3. On the linux machine with Ubuntu, I'd to do one more step to run the functional specs successfully. The gem file did not get created while creating the environment. So, I copied the gemfile/rakefiles from the mac machine to Ubuntu box and ran the functional tests with bin/run_functional_test and it worked fine.
